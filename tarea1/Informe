@@ -21,14 +21,15 @@ Un estudiante puede enviar uno o varios mensajes a otros estudiantes. Cada mensa
 Un estudiante puede ofrecer o recibir mentorías. Cada mentoría debe contar con un Identificador, Descripción, Tipo de mentoría y Estado.
 Un estudiante debe pertenecer a un programa académico. Cada programa académico debe contar con un Código, Nombre y Descripción.
 
-Entidades  
-Estudiante
-Perfil
-Carrera
-Materia
-Publicación
-Grupo
-Evento
-Mentoría
-Mensaje
+Entidades: 
+Estudiante: Es la entidad central, con esta se facilita la conexión casual, el intercambio de conocimientos entre pares, la formación de grupos de estudio o la organización de eventos informales.
+Programa: Entidad que contiene los programas a los que pertenece el estudiante, como Tecnología en Desarrollo de Software, Ingeniería Eléctrica, etc.
+Perfil: Es la identidad social y personal del estudiante en la red social. Esta entidad es gestionada directamente por el estudiante.
+Interés: Entidad que permite registrar los diferentes intereses de los estudiantes, como Programación, Inteligencia Artificial o Videojuegos.
+Materia: Entidad que representa las materias que pueden cursar los estudiantes y que pueden servir para organizar grupos de estudio.
+Publicación: Entidad que permite almacenar el contenido que comparten los estudiantes dentro de la plataforma.
+Grupo: Entidad que permite organizar comunidades de estudiantes para grupos de estudio, hackatones o clubes de interés.
+Evento: Entidad que permite organizar reuniones de estudio, talleres y actividades sociales.
+Mentoría: Entidad que permite gestionar la mentoría entre estudiantes con conocimientos o experiencia y estudiantes que buscan orientación.
+Mensaje: Entidad que permite almacenar la comunicación directa entre los estudiantes.
 
