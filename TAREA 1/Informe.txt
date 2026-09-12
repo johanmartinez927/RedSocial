@@ -1,0 +1,35 @@
+Se ha identificado una necesidad de  mejorar la comunicación y la interacción entre los estudiantes del Pascual Bravo. Aunque se cuenta con plataformas institucionales, a menudo son formales y no facilitan la conexión casual, el intercambio de conocimientos entre pares, la formación de grupos de estudio o la organización de eventos informales.
+La comunidad educativa necesita una plataforma donde puedan:
+Crear perfiles: compartir su área de estudio, intereses, habilidades en diferentes disciplinas o deportes, etc.
+Conectar con compañeros: encontrar y seguir a otros estudiantes con intereses similares o de cursos avanzados que puedan ofrecer mentoría.
+Publicar actualizaciones: compartir preguntas sobre tareas, recursos útiles, noticias de la industria tecnológica, o incluso memes relevantes para la vida universitaria.
+Crear y unirse a grupos: organizar grupos de estudio para materias específicas, equipos para hackatones, o clubes de interés (videojuegos, programación competitiva, etc.).
+Programar eventos: anunciar y coordinar reuniones de estudio, talleres, o actividades sociales.
+
+Requisitos
+La plataforma debe permitir registrar estudiantes del Pascual Bravo. Los estudiantes deben contar con un Identificador, Nombre, Apellido, Correo institucional, Fecha de nacimiento, Programa académico, Semestre y Fecha de registro.
+Cada estudiante puede crear su perfil dentro de la plataforma. Cada perfil se describe con Descripción personal, Área de estudio, Fotografía, Biografía y Tipo de mentoría.
+Un estudiante puede registrar uno o varios intereses, por ejemplo: Programación, Inteligencia Artificial o Videojuegos. De cada interés se tiene el Código, Nombre y Descripción.
+Un estudiante puede seguir a uno o varios estudiantes. Un estudiante puede ser seguido por uno o varios estudiantes.
+Un estudiante puede realizar una o varias publicaciones. Cada publicación debe contar con un Identificador, Contenido, Fecha de publicación y Tipo de publicación.
+Un estudiante puede cursar una o varias materias. Cada materia debe contar con un Código, Nombre y Descripción.
+Un estudiante puede pertenecer a uno o varios grupos. Cada grupo debe contar con un Identificador, Nombre, Descripción y Tipo de grupo.
+Un grupo puede estar relacionado con una materia para organizar grupos de estudio. Un grupo puede tener varios estudiantes.
+Un grupo puede organizar uno o varios eventos. Cada evento debe contar con un Identificador, Nombre, Descripción, Fecha, Hora y Lugar.
+Un estudiante puede participar en uno o varios eventos. Un evento puede tener uno o varios estudiantes participantes.
+Un estudiante puede enviar uno o varios mensajes a otros estudiantes. Cada mensaje debe contar con un Identificador, Contenido, Fecha y Hora de envío.
+Un estudiante puede ofrecer o recibir mentorías. Cada mentoría debe contar con un Identificador, Descripción, Tipo de mentoría y Estado.
+Un estudiante debe pertenecer a un programa académico. Cada programa académico debe contar con un Código, Nombre y Descripción.
+
+Entidades: 
+Estudiante: Es la entidad central, con esta se facilita la conexión casual, el intercambio de conocimientos entre pares, la formación de grupos de estudio o la organización de eventos informales.
+Programa: Entidad que contiene los programas a los que pertenece el estudiante, como Tecnología en Desarrollo de Software, Ingeniería Eléctrica, etc.
+Perfil: Es la identidad social y personal del estudiante en la red social. Esta entidad es gestionada directamente por el estudiante.
+Interés: Entidad que permite registrar los diferentes intereses de los estudiantes, como Programación, Inteligencia Artificial o Videojuegos.
+Materia: Entidad que representa las materias que pueden cursar los estudiantes y que pueden servir para organizar grupos de estudio.
+Publicación: Entidad que permite almacenar el contenido que comparten los estudiantes dentro de la plataforma.
+Grupo: Entidad que permite organizar comunidades de estudiantes para grupos de estudio, hackatones o clubes de interés.
+Evento: Entidad que permite organizar reuniones de estudio, talleres y actividades sociales.
+Mentoría: Entidad que permite gestionar la mentoría entre estudiantes con conocimientos o experiencia y estudiantes que buscan orientación.
+Mensaje: Entidad que permite almacenar la comunicación directa entre los estudiantes.
+
