@@ -4,7 +4,7 @@ Se ha identificado una necesidad de  mejorar la comunicación y la interacción 
 # Red Social Pascualina - Modelo Conceptual de Base de Datos
 
 ## Integrantes del Equipo
-Jonathan Montoya Machado
+Jonathan Montoya Machado-
 Johan Dario Martinez Echeverri
 
 ## Descripción del Caso
