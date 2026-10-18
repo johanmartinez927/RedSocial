@@ -1,0 +1,82 @@
+
+1.	Elección y Justificación del SGBD: 
+Para el desarrollo de la Red Social Estudiantil Pascualina se realizó una evaluación comparativa entre tres de los motores de bases de datos más representativos del mercado: PostgreSQL, MySQL y Microsoft SQL Server.
+
+1.1.	Cuadro Comparativo de SGBD:
+Criterio / Característica	PostgreSQL	MySQL	Microsoft SQL Server
+Tipo de Código / Licencia	Código Abierto (Open Source)
+(Licencia PostgreSQL - Estilo MIT/BSD)	Doble Licencia
+(GPL v2 / Licencia Comercial de Oracle)	Código Cerrado / Propietario 
+(Licenciamiento por núcleos o CALs)
+Costo de Licenciamiento	$0 USD (Completamente gratuito, sin restricciones de hardware o uso comercial/académico).	Gratuito en Community Edition. Las versiones avanzadas y de soporte requieren pago a Oracle.	Alto costo. Existe versión Express gratuita, pero restringida a 1 GB de RAM y 10 GB por base de datos.
+Gobernanza y Comunidad	Desarrollo independiente impulsado por una comunidad global sin fines de lucro. Sin monopolio corporativo.	Propiedad de Oracle Corporation. Las decisiones de desarrollo están condicionadas por intereses comerciales.	Propiedad exclusiva de Microsoft Corporation. Dependencia directa del fabricante (Vendor Lock-in).
+Cumplimiento ACID e Integridad	Estricto cumplimiento ACID por defecto. Excelente control de concurrencia mediante MVCC.	Cumple ACID en el motor InnoDB, pero con conversiones implícitas de datos menos rigurosas.	Estricto cumplimiento ACID, optimizado para entornos empresariales de Microsoft.
+Tipos de Datos y Funcionalidades	Soporte superior para JSONB (semiestructurados), arreglos, tipos numéricos exactos y búsquedas de texto (Full-Text).	Soporte para JSON, pero con capacidades de indexación más limitadas sobre documentos.	Excelente integración con .NET y herramientas BI, pero con licencias costosas para análisis avanzado.
+Herramienta Gráfica	pgAdmin 4: Interfaz moderna, multiplataforma, potente para edición DDL/DML y monitoreo.	MySQL Workbench: Herramienta de escritorio con modelado ER, aunque consume más recursos de sistema.	SQL Server Management Studio (SSMS): Muy completa, pero limitada principalmente al entorno Windows.
+
+Elección de PostgreSQL
+1.2.	Las Ventajas del Código Abierto:
+A diferencia de alternativas propietarias como SQL Server o de licenciamiento dual como MySQL:
+•	Sin costos de licenciamiento: Permite desplegar la base de datos en servidores de la institución educativa o en la nube sin incurrir en costos por núcleos de CPU o límites de almacenamiento (ventaja clave frente a las limitaciones de SQL Server Express).
+•	Ausencia de Vendor Lock-in (Dependencia de Proveedor): PostgreSQL no pertenece a ninguna corporación privada. Esto garantiza que el sistema no quedará sujeto a cambios intempestivos en las políticas de cobro o licencias (un riesgo presente en MySQL tras la adquisición por parte de Oracle).
+•	Transparencia y Seguridad: El código fuente es auditable por la comunidad mundial, lo que permite la corrección rápida de vulnerabilidades de seguridad.
+1.3.	Robustez Técnica para Redes Sociales
+Una red social universitaria requiere alta concurrencia y consultas complejas de relaciones (amigos de amigos, publicaciones por grupos, hilos de comentarios):
+•	Control de Concurrencia Multiversión (MVCC): Permite que múltiples estudiantes lean publicaciones mientras otros escriben comentarios o reaccionan, sin bloquear las tablas ni ralentizar el sistema.
+•	Flexibilidad de Datos: Si en el futuro la red social necesita almacenar configuraciones personalizadas de usuario o metadatos de publicaciones, el tipo de dato nativo JSONB de PostgreSQL permite mezclar el paradigma relacional con el no-relacional (NoSQL) de forma eficiente.
+1.4.	Integración con pgAdmin 4
+La gestión mediante pgAdmin 4 proporciona un entorno gráfico intuitivo para administrar las tablas, ejecutar el script DDL, inspeccionar las relaciones clave primaria/foránea y verificar visualmente las restricciones de integridad antes de realizar los envíos al repositorio de Git.
+
+2.	Transformación del Modelo Lógico al Físico.
+Paso 1: Mapeo de Entidades Lógicas a Tablas Físicas
+Cada entidad definida en el diagrama y en el documento de requerimientos fue traducida en una tabla física dentro del motor PostgreSQL 17: 
+•	Entidades Principales o Fuertes: Se convirtieron en tablas independientes con identidad propia (estudiante, habilidad, interes, grupo, evento, publicacion). 
+•	Entidades Débiles o Dependientes: Se convirtieron en tablas que extienden información o dependen directamente de una entidad fuerte, como perfil (relación 1:1 con estudiante) y comentario (dependiente de publicacion y estudiante). 
+
+•	Relaciones de Muchos a Muchos (N:M): Se transformaron en 7 tablas asociativas o de intersección física (estudiante_habilidad, estudiante_interes, miembro_grupo, asistente_evento, reaccion, seguir y mentoria). 
+
+Paso 2: Conversión de Atributos a Tipos de Datos Físicos de PostgreSQL 17
+Durante la transformación física, se asignaron tipos de datos nativos optimizados para cada campo: 
+
+•	Claves Primarias Simples: Los atributos de identificación pasaron del tipo lógico INT a SERIAL en PostgreSQL (id_estudiante, id_perfil, id_habilidad, id_interes, id_grupo, id_evento, id_publicacion, id_comentario). El tipo SERIAL genera secuencias numéricas automáticas de 4 bytes, optimizando la indexación mediante B-Tree y la velocidad de los cruces (JOINs). 
+•	Cadenas de Texto Limitadas: Los atributos de texto se tradujeron a VARCHAR(N), ajustando la longitud límite según la regla de negocio: VARCHAR(50) para nombres y apellidos, VARCHAR(100) para correos y temas, VARCHAR(255) para contraseñas cifradas (hash) y rutas de imágenes (foto_perfil), y VARCHAR(500) o VARCHAR(1000) para descripciones largas y publicaciones. 
+•	Marcas Temporales: Todos los campos de fechas de registro, actualización e interacciones se definieron como TIMESTAMP con el valor por defecto DEFAULT CURRENT_TIMESTAMP para asegurar auditoría exacta del sistema. 
+
+Paso 3: Aplicación Formal de la Normalización en el Modelo Físico
+El modelo físico refleja la aplicación de las tres primeras formas normales para eliminar redundancias y anomalías: 
+
+•	Primera Forma Normal (1FN): Atributos multivaluados como las habilidades, intereses o grupos de un estudiante no se guardan concatenados en una sola celda. Fueron descompuestos en las tablas independientes habilidad, interes, estudiante_habilidad, estudiante_interes y miembro_grupo, garantizando atomicidad de datos. 
+•	Segunda Forma Normal (2FN): En las tablas puente con clave primarias compuestas (estudiante_habilidad, estudiante_interes, miembro_grupo, asistente_evento, reaccion, seguir, mentoria), todos los atributos no clave dependientes (como nivel, rol o estado) dependen de la totalidad de la clave primaria compuesta y no de una parte de ella. Los datos descriptivos del estudiante o de la habilidad permanecen en sus respectivas tablas principales. 
+•	Tercera Forma Normal (3FN): Se eliminaron las dependencias transitivas en el esquema físico. Por ejemplo, no se almacena el nombre del estudiante dentro de publicacion o comentario, ni el nombre del grupo dentro de miembro_grupo. Toda la información suplementaria se obtiene en tiempo de ejecución mediante relaciones de clave foránea (FOREIGN KEY). 
+
+Paso 4: Implementación Física de las Relaciones e Integridad Referencial
+Las cardinalidades del modelo lógico se tradujeron físicamente de la siguiente manera: 
+
+•	Relación 1:1 (ESTUDIANTE – PERFIL): Se agregó la clave foránea id_estudiante en la tabla perfil con una restricción de unicidad (UNIQUE), garantizando que a cada estudiante le corresponda un solo perfil. 
+•	Relaciones 1:N (ESTUDIANTE – PUBLICACION, GRUPO – EVENTO, PUBLICACION – COMENTARIO, etc.): La clave primaria de la entidad padre ("1") se migró como clave foránea en la tabla hija ("N"). 
+•	Relaciones N:M con Claves Primarias Compuestas: Se implementaron mediante tablas de intersección física cuyos campos de enlace conforman una clave primaria compuesta combinada PRIMARY KEY (col1, col2). 
+•	Relaciones Autorreferenciales (N:M): Las tablas seguir (red de contactos) y mentoria  conectan la tabla estudiante consigo misma. Físicamente se crearon dos claves foráneas apuntando a estudiante(id_estudiante): id_seguidor/id_seguido en seguir e id_mentor/id_aprendiz en mentoria. 
+
+Paso 5: Restricciones de Dominio y Reglas de Integridad Integradas (ON DELETE / CHECK)
+En el script DDL ejecutable se incorporaron reglas de negocio físicas: 
+•	Acción Referencial ON DELETE CASCADE: Aplicada en tablas dependientes como perfil, publicación, comentario, reacción, miembro_grupo, asistente_evento, estudiante_habilidad y estudiante_interes. Si se elimina un estudiante o una publicación, se limpian automáticamente todas sus interacciones secundarias asociadas sin dejar registros huérfanos. 
+•	Acción Referencial ON DELETE RESTRICT: Implementada en la relación grupo.creador_id → estudiante.id_estudiante. Impide la eliminación accidental de la cuenta de un estudiante si es propietario/creador de un grupo activo, protegiendo la existencia del grupo hasta que la propiedad sea reasignada. 
+•	Restricciones CHECK de Negocio:
+o	chk_no_auto_seguimiento: Restringe a nivel de motor SQL que un estudiante no pueda seguirse a sí mismo (CHECK (id_seguidor < >id_seguido)). 
+
+o	chk_no_auto_mentoria: Garantiza que un estudiante no pueda ser mentor de sí mismo (CHECK (id_mentor < > id_aprendiz)). 
+
+5. Explicación y Referencia del Script DDL
+•	Limpieza del Esquema (CASCADE): Permite ejecutar el script en entornos de desarrollo sin errores por objetos preexistentes.
+•	Creación de tablas independientes: se crean primero las tablas estudiante, habilidad e interes. Estas entidades no dependen de ninguna otra tabla y generan las claves primarias (SERIAL) utilizadas en el resto del modelo.
+•	Creación de Entidades Dependientes: Se definen las tablas perfil, grupo, publicacion, seguir y mentoria, las cuales hacen referencia directa a la tabla estudiante mediante claves foráneas. 
+•	Creación de entidades dependientes: se construyen las tablas evento, comentario, reaccion, miembro_grupo, asistente_evento, estudiante_habilidad y estudiante_interes. 
+•	Validación de Restricciones Integradas: El script declara restricciones a nivel de columna y de tabla, incluyendo el uso de CHECK para prevenir auto-seguimiento (chk_no_auto_seguimiento) y auto-mentoría (chk_no_auto_mentoria), así como cláusulas UNIQUE para garantizar la integridad en correos y nombres de catálogo.   
+
+Conclusiones individuales:
+JDME 
+Trabajar en el diseño físico de esta base de datos me dejó aprendizajes muy valiosos sobre la arquitectura de software. Entendí que la integridad referencial no es solo una regla teórica, sino la garantía de que la plataforma no quede con datos 'basura'. Por ejemplo, me pareció fundamental configurar las reglas ON DELETE CASCADE en tablas como comentario y reaccion, ya que, si se elimina una publicación, el motor limpia automáticamente todas sus interacciones sin dejar registros huérfanos. 
+Durante el desarrollo también enfrenté algunas dificultades. Lo más complejo fue estructurar las relaciones autorreferenciales, en especial la tabla de mentoria, y coordinar el orden secuencial correcto dentro del script DDL para que no fallara al ejecutarse en pgAdmin 4 debido a dependencias de claves foráneas hacia tablas que aún no se habían creado.
+me surgieron varias dudas al elegir ciertos tipos de datos por ejemplo la elección de claves primarias numéricas de tipo INT (SERIAL) frente a cadenas VARCHAR optimiza significativamente el uso de memoria en los índices B-Tree y agiliza las operaciones de unión entre tablas. De igual forma, aprendí a valorar los campos TIMESTAMP con la propiedad DEFAULT CURRENT_TIMESTAMP, los cuales nos permiten llevar una auditoría precisa de cuándo los usuarios registran información o interactúan en la red social
+
+
