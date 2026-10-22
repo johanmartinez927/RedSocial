@@ -4,9 +4,9 @@ Se ha identificado una necesidad de  mejorar la comunicación y la interacción 
 # Red Social Pascualina -  Comparar la implementación de un diccionario de datos físico en diferentes SGBD
 
 ## Integrantes del Equipo
-*Jonathan Montoya Machado 
+* Jonathan Montoya Machado 
 
-*Johan Dario Martinez Echeverri
+* Johan Dario Martinez Echeverri
 
 ## Descripción del Caso
 Este repositorio contiene la implementación y documentación del modelo físico de base de datos para la Red Social Estudiantil Pascualina. Para garantizar la interoperabilidad del modelo de la Red Social Estudiantil Pascualina, se realizó la traducción y adaptación del DDL en tres motores de bases de datos líderes, evaluando su comportamiento respecto al soporte NoSQL (JSON) y datos espaciales (IoT/GPS). El proyecto integra un diseño relacional robusto con características avanzadas:
