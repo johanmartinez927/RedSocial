@@ -1,0 +1,1 @@
+Este repositorio contiene la implementación y documentación del modelo físico de base de datos para la Red Social Estudiantil Pascualina. El proyecto integra un diseño relacional robusto con características avanzadas como datos semiestructurados (JSON / JSONB), capacidades espaciales y geolocalización (PostGIS / SRID 4326) e índices de rendimiento (B-Tree y GIST).
