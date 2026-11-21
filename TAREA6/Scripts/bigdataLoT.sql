@@ -420,7 +420,7 @@ SELECT e.nombre,
 FROM estudiante e
 JOIN publicacion p ON p.id_estudiante = e.id_estudiante
 WHERE p.datos_extra ? 'sentimiento'
-GROUP BY e.nombre
+GROUP BY e.id_estudiante, e.nombre
 ORDER BY sent_prom DESC;
 
 -- C5. Aforo promedio por edificio (IoT - Agrupación clásica)
