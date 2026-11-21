@@ -295,6 +295,8 @@ CREATE INDEX idx_evento_datos_extra_gin ON evento USING GIN (datos_extra);
 CREATE INDEX idx_publicacion_datos_extra_gin ON publicacion USING GIN (datos_extra);
 CREATE INDEX idx_lectura_metadatos_gin ON lectura_sensor USING GIN (metadatos);
 CREATE INDEX idx_log_dispositivo_gin ON log_actividad USING GIN (dispositivo);
+CREATE INDEX idx_log_contexto_gin ON log_actividad USING GIN (contexto);
+CREATE INDEX idx_checkin_metadatos_gin ON checkin_ubicacion USING GIN (metadatos);
 
 -- Índices GIST para PostGIS (Acelera búsquedas espaciales y de proximidad)
 CREATE INDEX idx_evento_ubicacion_gist ON evento USING GIST (ubicacion);
@@ -381,8 +383,7 @@ INSERT INTO checkin_ubicacion (id_estudiante, id_evento, ubicacion, beacon_id, c
 SELECT e.nombre, e.apellido, p.datos_extra->'intereses_libres' AS intereses
 FROM estudiante e
 JOIN perfil p ON p.id_estudiante = e.id_estudiante
-WHERE p.datos_extra->'intereses_libres' @> '["IA"]'::JSONB;
-
+WHERE p.datos_extra @> '{"intereses_libres":["IA"]}'::JSONB;
 -- ==============================================================================
 -- C2. EXTRACCIÓN Y CASTEO DE CAMPOS SEMIESTRUCTURADOS
 -- Objetivo: Mostrar eventos con aforo máximo mayor a 100 y su primer premio.
